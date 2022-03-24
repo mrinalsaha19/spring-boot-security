@@ -11,7 +11,7 @@ function App() {
       <header className="App-header">
         <Router basename='/myApp' >
           <Switch>
-            <Route exact path="/login" render={(props) => <LandingPage {...props}/>} />
+            <Route path="/logon" render={(props) => <LandingPage {...props}/>} />
             <Route path="/dashboard" render={(props) => <Dashboard {...props}/>} />
           </Switch>
         </Router>

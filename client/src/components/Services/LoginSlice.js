@@ -17,12 +17,13 @@ const init = {
         status: STATUS.IDLE,
         error: null,
     },
-    user: {}
+    user: {},
+    token:''
 }
 
 export function postLogin(data) {
     return async (dispatch, getState) => {
-        await axios.get("/api/user").
+        await axios.post("/myApp/api/login",data).
             then((res) => {
                 if (res.status === 200 && res.data.successCode ==='200') {
                     dispatch(loginResponse(res.data));  
@@ -32,16 +33,30 @@ export function postLogin(data) {
             })
     }
 }
+
+export function authenticate(data) {
+    return async (dispatch, getState) => {
+        await axios.post("/myApp/api/authenticate",data).
+            then((res) => {
+                if (res.status === 200 && res.data.successCode ==='200') {
+                    dispatch(authSuccess(res.data));  
+                } else if(res.status === 200 && res.data.errorCode === '303'){
+                    dispatch(authFailure(res.data));
+                }
+            })
+    }
+}
+
 // ***************** This is another way of using redux call, using AsyncThunk ******************
 export const loginUsingThunk = createAsyncThunk(
     "loginSlice/login",
     async (data, { signal }) => {
-        const url = `/api/user`;
+        const url = `/myApp/api/login`;
         const source = axios.CancelToken.source()
         signal.addEventListener('abort', data, () => {
             source.cancel();
         })
-        const response = await axios.get(url)
+        const response = await axios.post(url,data)
         return response.data;
     }
 )
@@ -61,7 +76,15 @@ export const loginSlice = createSlice({
         resetUser(state, { payload }) {
             state = init;
             return state;
-        }
+        },
+        authSuccess(state, { payload }) {
+            state.status = STATUS.SUCCESS;
+            state.token = payload.jwt;
+        },
+        authFailure(state, { payload }) {
+            state.status = STATUS.ERROR;
+            state.error = { message: payload.errorMessage}
+        },
     },
     extraReducers: {
         [loginUsingThunk.pending] : (state, { meta }) => {
@@ -90,4 +113,4 @@ export const loginSlice = createSlice({
 })
 
 
-export const { loginResponse, loginFailure, resetUser } = loginSlice.actions;
+export const { loginResponse, loginFailure, resetUser, authSuccess, authFailure } = loginSlice.actions;

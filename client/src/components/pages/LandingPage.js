@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { postLogin, loginUsingThunk } from '../Services/LoginSlice'
+import { postLogin, loginUsingThunk, authenticate } from '../Services/LoginSlice'
 
 class LandingPage extends Component {
 
@@ -8,7 +8,7 @@ class LandingPage extends Component {
     super(props);
     this.state = {
       data: {
-        userName:'',
+        username:'',
         password:''
       },
       user: {}
@@ -23,6 +23,7 @@ class LandingPage extends Component {
     login = () => {
       const data = this.state.data;
       //this.props.postLogin(data)
+      this.props.authenticate(data);
       this.props.loginUsingThunk(data)
       console.log(this.props.user)
         this.props.history.push('/dashboard');
@@ -34,8 +35,8 @@ class LandingPage extends Component {
           <label>UserName</label>
         <input 
         type="text" 
-        name='userName'
-        value={this.state.data.userName}
+        name='username'
+        value={this.state.data.username}
         onChange={this.handleInputChange}
         />
         </div>
@@ -60,5 +61,5 @@ export default connect(
   (state) => ({
     user : state.login.user
   }),
-  { postLogin, loginUsingThunk }
+  { postLogin, loginUsingThunk, authenticate }
 ) (LandingPage)
