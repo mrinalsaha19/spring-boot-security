@@ -4,4 +4,7 @@ http://localhost:8080/myApp/logon
 username: user, password: password [hardcoded]
 landing page /dashboard welcome loginuser
 
-Dockers:
+# helm:
+helm install springsecurity springsecurity
+
+helm upgrade <templateName> <templateFolder> --values <url of values.yml>
