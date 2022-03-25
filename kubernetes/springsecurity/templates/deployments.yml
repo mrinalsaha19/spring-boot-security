@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springsecurity-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: springsecurity-app
+      version: v1
+  template:
+    metadata:
+      name: springsecurity-pod
+      labels:
+        app: springsecurity-app
+        version: v1
+    spec:
+      containers:
+      - name: springsecurity-container
+        image: mrinalsaha/testimage:springbootv1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service 
+metadata:
+  name: springsecurity-svc
+  labels:
+    app: springsecurity-app
+spec:
+  selector:
+    app: springsecurity-app
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    targetPort: 8080

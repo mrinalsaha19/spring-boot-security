@@ -1,0 +1,3 @@
+deployment:
+  image: "mrinalsaha/testimage"
+  tag: "springsecurityv1"
