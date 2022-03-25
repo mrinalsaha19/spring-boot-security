@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { resetUser } from '../Services/LoginSlice'
+import { resetUser, fetchUser } from '../Services/LoginSlice'
 
 class Dashboard extends Component {
   constructor(props) {
@@ -12,6 +12,10 @@ class Dashboard extends Component {
    componentWillUnmount() {
      this.props.resetUser();
    }
+   componentDidMount() {
+     console.log("called did mount")
+     this.props.fetchUser(this.props.token.jwt);
+   }
   logout = () => {
    // this.props.logout();
     //window.location.replace(`${window.location.origin}/myApp/login`);
@@ -19,8 +23,9 @@ class Dashboard extends Component {
 
   }
   render() {
-    console.log(this.props.user);
-    if (this.props.status === "idle") {
+    console.log(this.props.token.jwt);
+    console.log(this.props.fetchStatus);
+    if (this.props.fetchStatus === "idle") {
       return (<div>Loading...</div>); 
     } else 
     return (
@@ -28,6 +33,7 @@ class Dashboard extends Component {
       <div>
         {this.props.status === 'error' && <div>
           <label>{this.props.error.message}</label>
+          <label>{this.props.fetchStatus}</label>
           <div>
           <button type='button' onClick = { () => this.props.history.goBack()}>back</button>
           </div>
@@ -47,7 +53,9 @@ export default connect(
   (state) => ({
     user : state.login.user,
     error: state.login.error,
-    status: state.login.status
+    status: state.login.status,
+    token: state.login.token,
+    fetchStatus: state.login.fetchUser.status
   }),
-  { resetUser }
+  { resetUser, fetchUser }
 ) (Dashboard)

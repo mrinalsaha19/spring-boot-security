@@ -1,6 +1,7 @@
 package com.mrinal.myApp.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,8 +28,10 @@ public class SecurityController {
 	@Autowired
 	private UserDetailService userDetailsService;
 	
-	@PostMapping(path = "/api/authenticate")
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+	@PostMapping(path = "/api/authenticate", produces= MediaType.APPLICATION_JSON_VALUE)
+	public AuthenticationResponse AuthenticationResponse (@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+
+		AuthenticationResponse token = new AuthenticationResponse();
 
 		try {
 			authenticationManager.authenticate(
@@ -36,7 +39,8 @@ public class SecurityController {
 			);
 		}
 		catch (BadCredentialsException e) {
-			throw new Exception("Incorrect username or password", e);
+			//throw new Exception("Incorrect username or password", e);
+			token.setErrorCode("404");
 		}
 
 
@@ -44,7 +48,9 @@ public class SecurityController {
 				.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String jwt = jwtTokenUtil.generateToken(userDetails);
+		token.setJwt("Bearer "+jwt);
+		token.setSuccessCode("200");
 
-		return ResponseEntity.ok(new AuthenticationResponse(jwt));
+		return token;
 	}
 }
