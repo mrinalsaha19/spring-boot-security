@@ -11,3 +11,9 @@ landing page /dashboard welcome loginuser
 helm install springsecurity springsecurity
 
 helm upgrade <templateName> <templateFolder> --values <url of values.yml>
+
+Map hosts under ect\host
+  
+  port springsecurity.com
+
+http://springsecurity.com/myApp/dashboard
