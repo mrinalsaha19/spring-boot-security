@@ -12,8 +12,10 @@ helm install springsecurity springsecurity
 
 helm upgrade <templateName> <templateFolder> --values <url of values.yml>
 
-Map hosts under ect\host
+Map hosts under C:\Windows\System32\drivers\ect\host
   
-  port springsecurity.com
-
-http://springsecurity.com/myApp/dashboard
+port springsecurity.com
+"minikube tunnel" and your ingress resources would be available at "127.0.0.1"
+to run with minikube type
+minikube tunnel
+http://springsecurity.com/myApp/logon
